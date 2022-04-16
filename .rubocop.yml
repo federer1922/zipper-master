@@ -1,0 +1,28 @@
+Layout/LineLength:
+ Exclude:
+    - 'config/**/*.rb'
+    - 'bin/*'
+Lint/ShadowingOuterLocalVariable:
+  Exclude:
+    - 'spec/rails_helper.rb'
+Metrics/BlockLength:
+  Max: 30
+  Exclude:
+    - 'config/**/*.rb'
+    - 'db/**/*.rb'
+    - 'spec/**/*.rb'
+Metrics/MethodLength:
+  Max: 30
+Metrics/PerceivedComplexity:
+  Max: 10
+Metrics/CyclomaticComplexity:
+  Max: 12
+Metrics/AbcSize:
+  Max: 35
+Style/Documentation:
+  Enabled: false
+Style/FileWrite:
+  Enabled: false
+AllCops:
+  NewCops: enable
+  SuggestExtensions: false

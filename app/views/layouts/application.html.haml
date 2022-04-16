@@ -12,4 +12,14 @@
     %main
       .container
         = render 'layouts/header'
+        - if flash.alert
+          - flash.each do |type, msg|
+            .alert.alert-danger
+              = msg
+              %p
+        - if flash.notice
+          - flash.each do |type, msg|
+            .notice.alert-success
+              = msg
+              %p
         = yield

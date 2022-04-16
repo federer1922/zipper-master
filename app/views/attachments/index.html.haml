@@ -9,6 +9,6 @@
     - @attachments.each do |attachment|
       %tr
         %td= attachment.created_at.to_date
-        %td= attachment.file.filename
-        %td= attachment.file.byte_size
+        %td= attachment.name
+        %td= attachment.size
         %td= link_to 'Pobierz', attachment.file
