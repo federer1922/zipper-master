@@ -14,8 +14,8 @@ RSpec.describe 'Attachments', type: :request do
     end
 
     it 'has correct body' do
-      post attachments_path, params: { attachment: { file: original_file1 } }
-      post attachments_path, params: { attachment: { file: original_file2 } }
+      post attachments_path, params: { files: [original_file1], zip_name: 'zip1' }
+      post attachments_path, params: { files: [original_file2], zip_name: 'zip2' }
 
       get root_path
 
@@ -36,29 +36,88 @@ RSpec.describe 'Attachments', type: :request do
   end
 
   describe 'POST /create' do
-    it 'shows notice' do
-      post attachments_path, params: { attachment: { file: original_file1 } }
+    context 'with chosen files' do
+      context 'without entered zip name' do
+        it 'returns http success' do
+          post attachments_path, params: { files: [original_file1, original_file2] }
 
-      expect(response).to have_http_status(:success)
-      expect(flash[:notice]).to eq 'File successfully zipped'
+          expect(response).to have_http_status(:success)
+        end
+
+        it 'creates a new Attachment' do
+          expect do
+            post attachments_path, params: { files: [original_file1, original_file2] }
+          end.to change(Attachment, :count).by(1)
+        end
+
+        it 'shows notice' do
+          post attachments_path, params: { files: [original_file1, original_file2] }
+
+          expect(response).to have_http_status(:success)
+          expect(flash[:notice]).to eq 'File successfully zipped'
+        end
+
+        it 'has default file name' do
+          post attachments_path, params: { files: [original_file1, original_file2] }
+
+          expect(Attachment.last.name).to eq 'files.zip'
+        end
+
+        it 'compresses mulitple files with password' do
+          post attachments_path, params: { files: [original_file1, original_file2] }
+
+          zipped_file_content = Attachment.last.file.download
+
+          match_password = response.body.to_s.match(/Password:\n(.+)/)
+          password = match_password[1]
+
+          File.open('tmp/files.zip', 'wb') { |file| file.write(zipped_file_content) }
+
+          `unzip -o -P #{password} tmp/files.zip -d tmp`
+
+          decompressed_file1_content = File.read('tmp/old_macdonald.txt')
+          decompressed_file2_content = File.read('tmp/5_little_monkeys.txt')
+          original_file1.rewind
+          original_file2.rewind
+
+          expect(decompressed_file1_content).to eq original_file1.read
+          expect(decompressed_file2_content).to eq original_file2.read
+        end
+      end
+
+      context 'with entered zip name' do
+        it 'creates a new Attachment' do
+          expect do
+            post attachments_path, params: { files: [original_file1, original_file2], zip_name: 'rhymes' }
+          end.to change(Attachment, :count).by(1)
+        end
+
+        it 'has correct file name' do
+          post attachments_path, params: { files: [original_file1, original_file2], zip_name: 'rhymes' }
+
+          expect(Attachment.last.name).to eq 'rhymes.zip'
+        end
+      end
     end
 
-    it 'compresses file with password' do
-      post attachments_path, params: { attachment: { file: original_file1 } }
+    context 'without chosen files' do
+      it 'returns http success' do
+        post attachments_path, params: { files: nil }
 
-      zipped_file_content = Attachment.last.file.download
+        expect(response.status).to eq 422
+      end
 
-      match_password = response.body.to_s.match(/Password:\n(.+)/)
-      password = match_password[1]
+      it 'does not create a new Attachment' do
+        expect do
+          post attachments_path, params: { files: nil }
+        end.to change(Attachment, :count).by(0)
+      end
 
-      File.open('tmp/file.zip', 'wb') { |file| file.write(zipped_file_content) }
+      it 'shows alert' do
+        post attachments_path, params: { files: nil }
 
-      `unzip -o -P #{password} tmp/file.zip -d tmp`
-
-      decompressed_file_content = File.read('tmp/old_macdonald.txt')
-      original_file1.rewind
-
-      expect(decompressed_file_content).to eq original_file1.read
+        expect(flash[:alert]).to eq 'Files must be chosen'
+      end
     end
   end
 end

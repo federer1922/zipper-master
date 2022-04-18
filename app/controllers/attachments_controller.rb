@@ -10,13 +10,13 @@ class AttachmentsController < ApplicationController
   end
 
   def create
-    @attachment = AttachmentCreateService.call(params[:attachment])
-    if @attachment[:success]
+    @result = AttachmentCreateService.call(params)
+    if @result[:success]
       flash.now[:notice] = 'File successfully zipped'
       render :password
     else
-      flash.now[:alert] = @attachment[:alert]
-      render :new
+      flash.now[:alert] = @result[:alert]
+      render :new, status: @result[:http_status]
     end
   end
 end

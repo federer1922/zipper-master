@@ -12,13 +12,13 @@ Metrics/BlockLength:
     - 'db/**/*.rb'
     - 'spec/**/*.rb'
 Metrics/MethodLength:
-  Max: 30
+  Max: 35
 Metrics/PerceivedComplexity:
   Max: 10
 Metrics/CyclomaticComplexity:
   Max: 12
 Metrics/AbcSize:
-  Max: 35
+  Max: 45
 Style/Documentation:
   Enabled: false
 Style/FileWrite:

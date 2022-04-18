@@ -1,9 +1,9 @@
 %table.table
   %thead
     %tr
-      %th Data utworzenia
-      %th Nazwa pliku
-      %th Rozmiar
+      %th Creation date
+      %th File name
+      %th Size
       %th Link
   %tbody
     - @attachments.each do |attachment|
@@ -11,4 +11,4 @@
         %td= attachment.created_at.to_date
         %td= attachment.name
         %td= attachment.size
-        %td= link_to 'Pobierz', attachment.file
+        %td= link_to 'Download', attachment.file
