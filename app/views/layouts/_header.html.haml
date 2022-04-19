@@ -1,8 +1,16 @@
 %header.d-flex.flex-wrap.justify-content-center.py-3.mb-4.border-bottom
   = link_to root_path, class: "d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none" do
     %span.fs-4 Zipper
+  - if current_user.nil?
+    = link_to 'Sign in', new_user_session_path, class: 'nav-link'
+    \ 
+  - else
+    = link_to 'Sign out', destroy_user_session_path, method: :delete, class: 'nav-link'
+    \ 
+    = link_to "Change password", edit_user_registration_path, class: 'nav-link'
+    \ 
   %ul.nav.nav-pills
     %li.nav-item
-      = link_to 'Lista plików', root_path, class: ['nav-link', ('active' if current_page?(root_path))]
+      = link_to 'File list', root_path, class: ['nav-link', ('active' if current_page?(root_path))]
     %li.nav-item
-      = link_to 'Dodaj plik', new_attachment_path, class: ['nav-link', ('active' if current_page?(new_attachment_path))]
+      = link_to 'Add files', new_attachment_path, class: ['nav-link', ('active' if current_page?(new_attachment_path))]

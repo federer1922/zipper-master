@@ -1,14 +1,15 @@
 %table.table
   %thead
     %tr
-      %th Data utworzenia
-      %th Nazwa pliku
-      %th Rozmiar
+      %th Creation date
+      %th File name
+      %th Size
       %th Link
   %tbody
     - @attachments.each do |attachment|
       %tr
         %td= attachment.created_at.to_date
-        %td= attachment.file.filename
-        %td= attachment.file.byte_size
-        %td= link_to 'Pobierz', attachment.file
+        %td= attachment.name
+        %td= Converter.new.convert(attachment.size)
+        %td= link_to 'Download', attachment.file
+= paginate @attachments

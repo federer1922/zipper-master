@@ -1,3 +1,8 @@
-= simple_form_for @attachment do |f|
-  = f.input :file
-  = f.button :submit, class: "btn-primary"
+%form{:action => "/attachments", :method => "post", :enctype => "multipart/form-data"}
+  %input{:name => "authenticity_token", :type => "hidden", :value => form_authenticity_token()}/
+  %label.font-weight-bold{:for => "zipname"} Enter zip filename (optional):
+  %input.form-control{:name => "zip_name", :placeholder => "enter a name for the zip", :type => "text"}
+  %p
+  %label{:for => "files"} Select Multiple files:
+  %input#files{:multiple => true, :name => "files[]", :type => "file"}/
+  %button.btn.btn-primary{:type => "submit"} Submit
