@@ -56,7 +56,7 @@ Przy większych plikach rozmar w bajtach jest ciężki do rozszyfrowania. Dopasu
 
 #### ZD-6
 
-Użytkownicy zgłosili, że jak zapiszą formularz bez wybrania pliku, to aplikacja przestaje działać. Sprawdź, w czym jest problem i napraw go.
+Użytkownicy zgłosili, że jak zapiszą formularz bez wybrania pliku, to aplikacja przestaje działać. Sprawdź, w czym jest problem i napraw go. # wykonałem to zadanie podczas wykonywania wcześniejszych :) 
 
 ### Regular / Senior
 
