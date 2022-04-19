@@ -10,6 +10,6 @@
       %tr
         %td= attachment.created_at.to_date
         %td= attachment.name
-        %td= attachment.size
+        %td= Converter.new.convert(attachment.size)
         %td= link_to 'Download', attachment.file
 = paginate @attachments
