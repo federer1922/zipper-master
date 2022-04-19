@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module AttachmentCreateService
-  def self.call(files_params)
+  def self.call(files_params, current_user)
     files = files_params[:files]
 
     return { success: false, alert: 'Files must be chosen', http_status: 422 } if files.blank?
@@ -28,6 +28,7 @@ module AttachmentCreateService
     io_object.rewind
 
     attachment = Attachment.new
+    attachment.user = current_user
     attachment.file.attach(io: io_object, filename: "#{zip_name}.zip")
     attachment.name = attachment.file.filename
     attachment.size = attachment.file.byte_size

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class AttachmentsController < ApplicationController
+  before_action :authenticate_user!
+
   def index
-    @attachments = Attachment.all
+    @attachments = Attachment.where(user: current_user)
   end
 
   def new
@@ -10,7 +12,7 @@ class AttachmentsController < ApplicationController
   end
 
   def create
-    @result = AttachmentCreateService.call(params)
+    @result = AttachmentCreateService.call(params, current_user)
     if @result[:success]
       flash.now[:notice] = 'File successfully zipped'
       render :password

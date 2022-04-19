@@ -3,8 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe 'Attachments', type: :request do
+  let!(:user1) { FactoryBot.create(:user) }
+  let!(:user2) { FactoryBot.create(:user) }
   let(:original_file1) { fixture_file_upload(Rails.root.join('spec', 'data', 'old_macdonald.txt'), 'text/plain') }
   let(:original_file2) { fixture_file_upload(Rails.root.join('spec', 'data', '5_little_monkeys.txt'), 'text/plain') }
+
+  before { sign_in(user1) }
 
   describe 'GET /index' do
     it 'returns http success' do
@@ -13,8 +17,12 @@ RSpec.describe 'Attachments', type: :request do
       expect(response).to have_http_status(:success)
     end
 
-    it 'has correct body' do
+    it 'shows only the attachments of the current user' do
       post attachments_path, params: { files: [original_file1], zip_name: 'zip1' }
+
+      sign_out(user1)
+      sign_in(user2)
+
       post attachments_path, params: { files: [original_file2], zip_name: 'zip2' }
 
       get root_path
@@ -22,7 +30,7 @@ RSpec.describe 'Attachments', type: :request do
       attachment1 = Attachment.first
       attachment2 = Attachment.last
 
-      expect(response.body).to include attachment1.name
+      expect(response.body).to_not include attachment1.name
       expect(response.body).to include attachment2.name
     end
   end
