@@ -33,6 +33,22 @@ RSpec.describe 'Attachments', type: :request do
       expect(response.body).to_not include attachment1.name
       expect(response.body).to include attachment2.name
     end
+
+    it 'paginates attachments from newest to oldest' do
+      post attachments_path, params: { files: [original_file1], zip_name: 'zip1' }
+      post attachments_path, params: { files: [original_file2], zip_name: 'zip2' }
+      post attachments_path, params: { files: [original_file2], zip_name: 'zip3' }
+
+      get root_path, params: { page: 2 }
+
+      attachment1 = Attachment.first
+      attachment2 = Attachment.second
+      attachment3 = Attachment.last
+
+      expect(response.body).to include attachment1.name
+      expect(response.body).to_not include attachment2.name
+      expect(response.body).to_not include attachment3.name
+    end
   end
 
   describe 'GET /new' do

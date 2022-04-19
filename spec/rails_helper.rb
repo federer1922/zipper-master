@@ -27,4 +27,6 @@ RSpec.configure do |config|
       with.library :rails
     end
   end
+
+  Attachment.paginates_per 2
 end

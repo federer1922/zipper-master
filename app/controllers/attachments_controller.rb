@@ -4,7 +4,7 @@ class AttachmentsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @attachments = Attachment.where(user: current_user)
+    @attachments = Attachment.with_current_user(current_user).page(params[:page])
   end
 
   def new
